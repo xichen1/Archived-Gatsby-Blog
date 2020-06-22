@@ -24,11 +24,121 @@ EX:
 <p>通过这种划分方法来递推expression的方法是这样的:</p>
 <p>EX: 1+2*3-4/5</p>
 <p>这是一个expression, 含有3个factors, 分别是1, 2<em>3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2\</em>3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为*. 4/5同理. 到目前为止,我们有了3个factor</p>
-<p><img src="C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor1.JPG"></p>
-<p><img src="C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor2.JPG" alt="factor2"></p>
-<p><img src="C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor3.JPG" alt="factor3"></p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 107px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/b4ca681e2fb812e8f99db1bb045a14b3/a18c5/factor1.jpg"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 94.39252336448598%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAATABQDASIAAhEBAxEB/8QAGAABAQADAAAAAAAAAAAAAAAAAAECAwX/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAHvRibEFAB//8QAFhAAAwAAAAAAAAAAAAAAAAAAACEw/9oACAEBAAEFAhw//8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAwEBPwEf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAgEBPwEf/8QAFxAAAwEAAAAAAAAAAAAAAAAAAREgQf/aAAgBAQAGPwKCtn//xAAbEAEBAAIDAQAAAAAAAAAAAAABEQAxECBBYf/aAAgBAQABPyFZlG5PnDscIKVfGBAOn//aAAwDAQACAAMAAAAQcM88/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAwEBPxAf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAgEBPxAf/8QAHRABAAICAgMAAAAAAAAAAAAAAQARITFBURBx0f/aAAgBAQABPxCgYtcB3ENhcuR9hrZLgS6sQ6iuxBp6qZk0BCceP//Z'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="factor1"
+        title="factor1"
+        src="/static/b4ca681e2fb812e8f99db1bb045a14b3/a18c5/factor1.jpg"
+        srcset="/static/b4ca681e2fb812e8f99db1bb045a14b3/a18c5/factor1.jpg 107w"
+        sizes="(max-width: 107px) 100vw, 107px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 306px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/874b97579aaf19fad035f7ddf04cd3d0/01fdd/factor2.jpg"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 78.37837837837837%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAQABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB34oQf//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEAAQUCX//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEABj8CX//EABoQAAICAwAAAAAAAAAAAAAAAAAQAREhMUH/2gAIAQEAAT8hOrNqNH//2gAMAwEAAgADAAAAEADP/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPxA//8QAGBABAAMBAAAAAAAAAAAAAAAAAQARIRD/2gAIAQEAAT8QgPC0gZG6yNdYz//Z'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="factor2"
+        title="factor2"
+        src="/static/874b97579aaf19fad035f7ddf04cd3d0/01fdd/factor2.jpg"
+        srcset="/static/874b97579aaf19fad035f7ddf04cd3d0/a80bd/factor2.jpg 148w,
+/static/874b97579aaf19fad035f7ddf04cd3d0/1c91a/factor2.jpg 295w,
+/static/874b97579aaf19fad035f7ddf04cd3d0/01fdd/factor2.jpg 306w"
+        sizes="(max-width: 306px) 100vw, 306px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 239px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/3e5e22634ad3466b8607d3733894bc22/e5db7/factor3.jpg"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 91.21621621621621%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAASABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3kpUChAf/8QAFBABAAAAAAAAAAAAAAAAAAAAMP/aAAgBAQABBQIf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAwEBPwEf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAgEBPwEf/8QAFBABAAAAAAAAAAAAAAAAAAAAMP/aAAgBAQAGPwIf/8QAGhAAAgIDAAAAAAAAAAAAAAAAAAEQESAhMf/aAAgBAQABPyF8FF7GJ3h//9oADAMBAAIAAwAAABCwCDz/xAAUEQEAAAAAAAAAAAAAAAAAAAAg/9oACAEDAQE/EB//xAAUEQEAAAAAAAAAAAAAAAAAAAAg/9oACAECAQE/EB//xAAbEAADAQEAAwAAAAAAAAAAAAAAAREhMRBxkf/aAAgBAQABPxDTTokbyLwncTPQ0RFY/hFbNO9Fiw//2Q=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="factor3"
+        title="factor3"
+        src="/static/3e5e22634ad3466b8607d3733894bc22/e5db7/factor3.jpg"
+        srcset="/static/3e5e22634ad3466b8607d3733894bc22/a80bd/factor3.jpg 148w,
+/static/3e5e22634ad3466b8607d3733894bc22/e5db7/factor3.jpg 239w"
+        sizes="(max-width: 239px) 100vw, 239px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
 <p>向上一级, 考虑factor组成的expression. 程序先检测到factor1和2*3, 然后1和*的father node就变成了+. 程序继续考虑4/5也是factor, 于是+和/的father node变成了-.</p>
-<p><img src="C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cresult1.JPG"></p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 590px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/f71b0bceb6961aa1fbb19acb97a13abc/073a0/result1.jpg"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 57.432432432432435%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3gUH/8QAFRABAQAAAAAAAAAAAAAAAAAAEAH/2gAIAQEAAQUCa//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEABj8CX//EABkQAAIDAQAAAAAAAAAAAAAAAAAQATFBYf/aAAgBAQABPyE6qEav/9oADAMBAAIAAwAAABDAD//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QP//EABsQAAIDAAMAAAAAAAAAAAAAAAERACFBEFFh/9oACAEBAAE/ECcCcpIYCx7soalkPfH/2Q=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="result1"
+        title="result1"
+        src="/static/f71b0bceb6961aa1fbb19acb97a13abc/1c72d/result1.jpg"
+        srcset="/static/f71b0bceb6961aa1fbb19acb97a13abc/a80bd/result1.jpg 148w,
+/static/f71b0bceb6961aa1fbb19acb97a13abc/1c91a/result1.jpg 295w,
+/static/f71b0bceb6961aa1fbb19acb97a13abc/1c72d/result1.jpg 590w,
+/static/f71b0bceb6961aa1fbb19acb97a13abc/073a0/result1.jpg 610w"
+        sizes="(max-width: 590px) 100vw, 590px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
 <h4>代码</h4>
 <p>我们先建一个node class作为存放node值的数据结构, 这个类中定义了该node是不是纯数字term, 他的左右child分别是什么, 以及如果不是leaf node, 他存放了什么operator:</p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">struct Expression {
