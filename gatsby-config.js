@@ -8,7 +8,7 @@ module.exports = {
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://xichen1.github.io/`,
     social: {
-      twitter: `ppa_xxa`,
+      twitter: `GbdPpx`,
     },
   },
   plugins: [

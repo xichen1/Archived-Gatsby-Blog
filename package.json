@@ -1,11 +1,11 @@
 {
-  "name": "gatsby-starter-blog",
+  "name": "MY-Blog",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "description": "A blog powered by Gatsby and Markdown",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Xichen Pan <xichen.pan@gmail.com>",
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/xichen1/xichen1.github.io/issues"
   },
   "dependencies": {
     "gatsby": "^2.22.15",
