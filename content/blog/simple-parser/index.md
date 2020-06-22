@@ -3,7 +3,6 @@ title: 如何写一个简单的parser
 date: "2020-06-21"
 description: "compiler"
 ---
-## 如何写一个简单的parser
 
 ### 起因
 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js初学者看的文章发现基本都是先从基本逻辑讲起, 再不断往上堆功能最后再考虑边际情况. 感觉这种方法又啰嗦又不robust, 就突然想起了大一课上学过一个叫逆波兰表达式的东西(Reverse Polish notation), 貌似能很方便的计算任意的一个expression, 然后我就把js扔在了一边开始研究怎么把给出的一个数学expression转换成RPN形式.
@@ -12,7 +11,7 @@ description: "compiler"
 逆波兰表达式中的所有符号都在第二个操作数的后面
 EX:
 1 2 3 + *
-在这个表达式里, +号在3后面, 所以+连接2和3, 而*号在2和3后面, 所以\*号连接1和(2+3).
+在这个表达式里, +号在3后面, 所以+连接2和3, 而\*号在2和3后面, 所以\*号连接1和(2+3).
 使用stack后RPN的计算可以变得非常方便, 具体计算一个RPN值的方法是:
 依次把token放进stack, 遇到operator时把入栈的token数字都拿出并且用operator连接求值, 将值放进stack. 遍历过一遍RPN后, stack顶的值就是这个RPN的值.
 
@@ -33,7 +32,7 @@ EX:
 
 我们可以先分析一下一个expression的语法. 一个expression: 1+2*(3+4)/*5+6/7-8, 我们可以把他分成三个部分, 一是最简单的term. 一个term可以是一个数字, 也可以是由()围起来的一个expression, 这么分是因()的值和数字值地位相同. 
 
-其次我们可以把由\*或/连接的元素称为factor. 在例子中, 2*(3+4)/5就是一个factor, 这么分的原因是可以观察到所有factor中的被\*或/连接的元素都是一个term, 如2, (3+4) 和 5. 要注意的是, 在实现的过程中, 要考虑只有一个term而不需要\*或/来连接的情况,　这种情况下, 我们也称这个term为factor.
+其次我们可以把由\*或/连接的元素称为factor. 在例子中, 2\*(3+4)/5就是一个factor, 这么分的原因是可以观察到所有factor中的被\*或/连接的元素都是一个term, 如2, (3+4) 和 5. 要注意的是, 在实现的过程中, 要考虑只有一个term而不需要\*或/来连接的情况,　这种情况下, 我们也称这个term为factor.
 
 最后, 我们可以把由+或-连接的元素称为expression. 在例子中如1+2(3+4)/5+6/7-8, 和3+4这样的都被称为expression. 这么划分expression的原因是由+或-直接连接的元素都是factor. 要注意的是, 在实现过程中, 要考虑只有一个term而不需要\+或-来连接的情况, 这种情况下, 我们也称这个factor为expression. 
 
@@ -41,21 +40,21 @@ EX:
 
 通过这种划分方法来递推expression的方法是这样的:
 
-EX: 1+2*3-4/5
+EX: 1+2\*3-4/5
 
-这是一个expression, 含有3个factors, 分别是1, 2*3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2\*3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为\*. 4/5同理. 到目前为止,我们有了3个factor
+这是一个expression, 含有3个factors, 分别是1, 2\*3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2\*3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为\*. 4/5同理. 到目前为止,我们有了3个factor
 
-![](C:\Users\ppx\Desktop\xichen1.github.io\content\blog\simple-parser\factor1.JPG)
+![factor1](./factor1.JPG)
 
-![factor2](C:\Users\ppx\Desktop\xichen1.github.io\content\blog\simple-parser\factor2.JPG)
+![factor2](./factor2.JPG)
 
-![factor3](C:\Users\ppx\Desktop\xichen1.github.io\content\blog\simple-parser\factor3.JPG)
+![factor3](./factor3.JPG)
 
 
 
 向上一级, 考虑factor组成的expression. 程序先检测到factor1和2\*3, 然后1和\*的father node就变成了+. 程序继续考虑4/5也是factor, 于是+和/的father node变成了-.
 
-![](C:\Users\ppx\Desktop\xichen1.github.io\content\blog\simple-parser\result1.JPG)
+![result1](./result1.JPG)
 
 #### 代码
 
@@ -86,7 +85,7 @@ struct Expression {
         Isnumber = false;
         Number = 0;
     }
-}
+};
 ```
 
 其中的构造函数分别是为后面建两种node准备的.
