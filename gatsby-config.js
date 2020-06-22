@@ -3,12 +3,13 @@ module.exports = {
     title: `PPX Blog`,
     author: {
       name: `ppx`,
-      summary: `who lives and works in Edmonton.`,
+      summary: `who lives in Edmonton.`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `PPX's blog`,
     siteUrl: `https://xichen1.github.io/`,
     social: {
       twitter: `GbdPpx`,
+      github: `xichen1`
     },
   },
   plugins: [
@@ -73,7 +74,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`,
+        icon: `content/assets/profile-pic.jpg`,
       },
     },
     `gatsby-plugin-react-helmet`,
