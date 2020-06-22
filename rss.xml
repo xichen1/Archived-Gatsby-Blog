@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 22 Jun 2020 08:33:01 GMT</lastBuildDate><item><title><![CDATA[如何写一个简单的parser]]></title><description><![CDATA[如何写一个简单的parser 起因 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js…]]></description><link>https://xichen1.github.io/simple-parser/</link><guid isPermaLink="false">https://xichen1.github.io/simple-parser/</guid><pubDate>Sun, 21 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;如何写一个简单的parser&lt;/h2&gt;
-&lt;h3&gt;起因&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 22 Jun 2020 12:19:02 GMT</lastBuildDate><item><title><![CDATA[如何写一个简单的parser]]></title><description><![CDATA[起因 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js…]]></description><link>https://xichen1.github.io/simple-parser/</link><guid isPermaLink="false">https://xichen1.github.io/simple-parser/</guid><pubDate>Sun, 21 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;起因&lt;/h3&gt;
 &lt;p&gt;因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js初学者看的文章发现基本都是先从基本逻辑讲起, 再不断往上堆功能最后再考虑边际情况. 感觉这种方法又啰嗦又不robust, 就突然想起了大一课上学过一个叫逆波兰表达式的东西(Reverse Polish notation), 貌似能很方便的计算任意的一个expression, 然后我就把js扔在了一边开始研究怎么把给出的一个数学expression转换成RPN形式.&lt;/p&gt;
 &lt;h3&gt;逆波兰表达式(RPN)&lt;/h3&gt;
 &lt;p&gt;逆波兰表达式中的所有符号都在第二个操作数的后面
 EX:
 1 2 3 + *
-在这个表达式里, +号在3后面, 所以+连接2和3, 而&lt;em&gt;号在2和3后面, 所以\&lt;/em&gt;号连接1和(2+3).
+在这个表达式里, +号在3后面, 所以+连接2和3, 而*号在2和3后面, 所以*号连接1和(2+3).
 使用stack后RPN的计算可以变得非常方便, 具体计算一个RPN值的方法是:
 依次把token放进stack, 遇到operator时把入栈的token数字都拿出并且用operator连接求值, 将值放进stack. 遍历过一遍RPN后, stack顶的值就是这个RPN的值.&lt;/p&gt;
 &lt;h4&gt;问题&lt;/h4&gt;
@@ -18,12 +17,12 @@ EX:
 &lt;p&gt;于是问题就变成了如何造出一个parser, which能接受任意的带括号的四则运算表达式, 并且能输出一棵AST. &lt;/p&gt;
 &lt;p&gt;通过&lt;a href=&quot;http://www.cppblog.com/vczh/archive/2008/06/15/53373.html&quot;&gt;轮子哥的博客&lt;/a&gt;, 我了解到一般编译器中用到的parser都是用一种叫递归下降的算法写的.&lt;/p&gt;
 &lt;p&gt;我们可以先分析一下一个expression的语法. 一个expression: 1+2&lt;em&gt;(3+4)/&lt;/em&gt;5+6/7-8, 我们可以把他分成三个部分, 一是最简单的term. 一个term可以是一个数字, 也可以是由()围起来的一个expression, 这么分是因()的值和数字值地位相同. &lt;/p&gt;
-&lt;p&gt;其次我们可以把由*或/连接的元素称为factor. 在例子中, 2&lt;em&gt;(3+4)/5就是一个factor, 这么分的原因是可以观察到所有factor中的被\&lt;/em&gt;或/连接的元素都是一个term, 如2, (3+4) 和 5. 要注意的是, 在实现的过程中, 要考虑只有一个term而不需要*或/来连接的情况,　这种情况下, 我们也称这个term为factor.&lt;/p&gt;
+&lt;p&gt;其次我们可以把由*或/连接的元素称为factor. 在例子中, 2*(3+4)/5就是一个factor, 这么分的原因是可以观察到所有factor中的被*或/连接的元素都是一个term, 如2, (3+4) 和 5. 要注意的是, 在实现的过程中, 要考虑只有一个term而不需要*或/来连接的情况,　这种情况下, 我们也称这个term为factor.&lt;/p&gt;
 &lt;p&gt;最后, 我们可以把由+或-连接的元素称为expression. 在例子中如1+2(3+4)/5+6/7-8, 和3+4这样的都被称为expression. 这么划分expression的原因是由+或-直接连接的元素都是factor. 要注意的是, 在实现过程中, 要考虑只有一个term而不需要+或-来连接的情况, 这种情况下, 我们也称这个factor为expression. &lt;/p&gt;
 &lt;p&gt;如 ”1“ 这个表达式, 他不需要加减号来连接, 因此他自己就是一个expression, 也是一个factor. 而他也没有乘除号来连接因此他也是一个term.&lt;/p&gt;
 &lt;p&gt;通过这种划分方法来递推expression的方法是这样的:&lt;/p&gt;
 &lt;p&gt;EX: 1+2*3-4/5&lt;/p&gt;
-&lt;p&gt;这是一个expression, 含有3个factors, 分别是1, 2&lt;em&gt;3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2\&lt;/em&gt;3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为*. 4/5同理. 到目前为止,我们有了3个factor&lt;/p&gt;
+&lt;p&gt;这是一个expression, 含有3个factors, 分别是1, 2*3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2*3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为*. 4/5同理. 到目前为止,我们有了3个factor&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 107px; &quot;
@@ -165,7 +164,7 @@ EX:
         Isnumber = false;
         Number = 0;
     }
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+};&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;其中的构造函数分别是为后面建两种node准备的.&lt;/p&gt;
 &lt;p&gt;我们需要至少三个函数, 来依次检测expression, factor 和term, 如果term中又出现了expression, 则又需要调用检测expression的函数. 此外, 我们还需要检测term中是否是纯数字的函数, 如果是纯数字, 则需把数字存在leaf node中. 因此声明四个函数:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Expression *exp(char *&amp;amp;Stream);
