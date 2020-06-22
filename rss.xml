@@ -1,2 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://ppxa.link</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 16 Jun 2020 03:16:09 GMT</lastBuildDate><item><title><![CDATA[Hello World]]></title><description><![CDATA[Hello World! This is my first post on my blog!]]></description><link>https://ppxa.link/hello-world/</link><guid isPermaLink="false">https://ppxa.link/hello-world/</guid><pubDate>Mon, 15 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Hello World!&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 22 Jun 2020 08:28:39 GMT</lastBuildDate><item><title><![CDATA[如何写一个简单的parser]]></title><description><![CDATA[如何写一个简单的parser 起因 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js…]]></description><link>https://xichen1.github.io/simple-parser/</link><guid isPermaLink="false">https://xichen1.github.io/simple-parser/</guid><pubDate>Sun, 21 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;如何写一个简单的parser&lt;/h2&gt;
+&lt;h3&gt;起因&lt;/h3&gt;
+&lt;p&gt;因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js初学者看的文章发现基本都是先从基本逻辑讲起, 再不断往上堆功能最后再考虑边际情况. 感觉这种方法又啰嗦又不robust, 就突然想起了大一课上学过一个叫逆波兰表达式的东西(Reverse Polish notation), 貌似能很方便的计算任意的一个expression, 然后我就把js扔在了一边开始研究怎么把给出的一个数学expression转换成RPN形式.&lt;/p&gt;
+&lt;h3&gt;逆波兰表达式(RPN)&lt;/h3&gt;
+&lt;p&gt;逆波兰表达式中的所有符号都在第二个操作数的后面
+EX:
+1 2 3 + *
+在这个表达式里, +号在3后面, 所以+连接2和3, 而&lt;em&gt;号在2和3后面, 所以\&lt;/em&gt;号连接1和(2+3).
+使用stack后RPN的计算可以变得非常方便, 具体计算一个RPN值的方法是:
+依次把token放进stack, 遇到operator时把入栈的token数字都拿出并且用operator连接求值, 将值放进stack. 遍历过一遍RPN后, stack顶的值就是这个RPN的值.&lt;/p&gt;
+&lt;h4&gt;问题&lt;/h4&gt;
+&lt;p&gt;但是使用RPN计算一个表达式的值有一个问题, 就是如何把普通的expression又称中缀表达式转换成RPN. Wikipedia告诉我可以用一个叫调度场算法的方法来convert. 但由于其适应性不够(只能用在RPN问题中)而且貌似很难证明, 遂放弃. 而这个时候我发现了parser的存在.&lt;/p&gt;
+&lt;h3&gt;Parser&lt;/h3&gt;
+&lt;p&gt;根据&lt;a href=&quot;https://www.yinwang.org/blog-cn/2015/09/19/parser&quot;&gt;王垠的文章&lt;/a&gt;, parser是能把文本转换成一种叫抽象语法树(AST)的数据结构的工具. 对于1+2这样的表达式, 计算机无法直接对其计算, 而要通过AST来计算他的值.
+对于1+2这样的数学表达式来说AST是一个二叉树, 每一个node代表了一个操作符, 而二叉树的leaf则为最初始的操作数. //TODD: add img&lt;/p&gt;
+&lt;p&gt;因此一个中缀表达式可以被转换成由操作符和操作数组成的无括号的二叉树, 而有了这棵二叉树, 中缀转RPN将会变得非常简单. 更简单的是我可以通过遍历这棵树来直接求得中缀expression的答案. 而parser要干的事, 就是自动地把任意一个expression转换成这棵AST. &lt;/p&gt;
+&lt;h4&gt;算法&lt;/h4&gt;
+&lt;p&gt;于是问题就变成了如何造出一个parser, which能接受任意的带括号的四则运算表达式, 并且能输出一棵AST. &lt;/p&gt;
+&lt;p&gt;通过&lt;a href=&quot;http://www.cppblog.com/vczh/archive/2008/06/15/53373.html&quot;&gt;轮子哥的博客&lt;/a&gt;, 我了解到一般编译器中用到的parser都是用一种叫递归下降的算法写的.&lt;/p&gt;
+&lt;p&gt;我们可以先分析一下一个expression的语法. 一个expression: 1+2&lt;em&gt;(3+4)/&lt;/em&gt;5+6/7-8, 我们可以把他分成三个部分, 一是最简单的term. 一个term可以是一个数字, 也可以是由()围起来的一个expression, 这么分是因()的值和数字值地位相同. &lt;/p&gt;
+&lt;p&gt;其次我们可以把由*或/连接的元素称为factor. 在例子中, 2&lt;em&gt;(3+4)/5就是一个factor, 这么分的原因是可以观察到所有factor中的被\&lt;/em&gt;或/连接的元素都是一个term, 如2, (3+4) 和 5. 要注意的是, 在实现的过程中, 要考虑只有一个term而不需要*或/来连接的情况,　这种情况下, 我们也称这个term为factor.&lt;/p&gt;
+&lt;p&gt;最后, 我们可以把由+或-连接的元素称为expression. 在例子中如1+2(3+4)/5+6/7-8, 和3+4这样的都被称为expression. 这么划分expression的原因是由+或-直接连接的元素都是factor. 要注意的是, 在实现过程中, 要考虑只有一个term而不需要+或-来连接的情况, 这种情况下, 我们也称这个factor为expression. &lt;/p&gt;
+&lt;p&gt;如 ”1“ 这个表达式, 他不需要加减号来连接, 因此他自己就是一个expression, 也是一个factor. 而他也没有乘除号来连接因此他也是一个term.&lt;/p&gt;
+&lt;p&gt;通过这种划分方法来递推expression的方法是这样的:&lt;/p&gt;
+&lt;p&gt;EX: 1+2*3-4/5&lt;/p&gt;
+&lt;p&gt;这是一个expression, 含有3个factors, 分别是1, 2&lt;em&gt;3和4/5. 1中含有一个纯数字term 1, 这时我们就到了AST的底端, 而这个leaf的值, 就是这个term的值1. 2\&lt;/em&gt;3中含有两个纯数字term 2 和 3, 而2和3可以分别被存放在最低端的两个leaf中, 值分别是2和3. 而这两个leaf的father node, 则存放了连接这两个term的operator, 在这个例子中为*. 4/5同理. 到目前为止,我们有了3个factor&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor1.JPG&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor2.JPG&quot; alt=&quot;factor2&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cfactor3.JPG&quot; alt=&quot;factor3&quot;&gt;&lt;/p&gt;
+&lt;p&gt;向上一级, 考虑factor组成的expression. 程序先检测到factor1和2*3, 然后1和*的father node就变成了+. 程序继续考虑4/5也是factor, 于是+和/的father node变成了-.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;C:%5CUsers%5Cppx%5CDesktop%5Cxichen1.github.io%5Ccontent%5Cblog%5Csimple-parser%5Cresult1.JPG&quot;&gt;&lt;/p&gt;
+&lt;h4&gt;代码&lt;/h4&gt;
+&lt;p&gt;我们先建一个node class作为存放node值的数据结构, 这个类中定义了该node是不是纯数字term, 他的左右child分别是什么, 以及如果不是leaf node, 他存放了什么operator:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;struct Expression {
+	bool Isnumber;
+    int Number;
+    char Operator;
+    Expression *Left;
+    Expression *Right;
+
+    // arrive the bottom of the AST, only number on the node
+    Expression(int aNumber) {
+        Number = aNumber;
+        Isnumber = true;
+        Left = nullptr;
+        Right = nullptr;
+        Operator = 0;
+    }
+
+    // operator nodes of the AST
+    Expression(char aOperator, Expression *left, Expression *right){
+        Operator = aOperator;
+        Left = left;
+        Right = right;
+        Isnumber = false;
+        Number = 0;
+    }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其中的构造函数分别是为后面建两种node准备的.&lt;/p&gt;
+&lt;p&gt;我们需要至少三个函数, 来依次检测expression, factor 和term, 如果term中又出现了expression, 则又需要调用检测expression的函数. 此外, 我们还需要检测term中是否是纯数字的函数, 如果是纯数字, 则需把数字存在leaf node中. 因此声明四个函数:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Expression *exp(char *&amp;amp;Stream);
+Expression *factor(char *&amp;amp;Stream);
+Expression *term(char *&amp;amp;Stream);
+Expression *number(char *&amp;amp;Stream);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;给出一个函数,　其他三个的实现方法类似&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Expression *expr(char *&amp;amp;Stream) {
+    char *Read = Stream;
+    Expression *t = fact(Read);
+    if (t) {
+        Expression *result = t;
+
+        while (true) {
+            char sign = 0;
+            if (comp(Read, &amp;quot;+&amp;quot;)) {
+                sign = &amp;#39;+&amp;#39;;
+            } else if (comp(Read, &amp;quot;-&amp;quot;)) {
+                sign = &amp;#39;-&amp;#39;;
+            } else {
+                break;
+            }
+            Expression *next = fact(Read);
+            if (next) {
+                result = new Expression(sign, result, next);
+            } else {
+                return nullptr;
+            }
+        }
+        Stream = Read;
+
+        return result;
+    } else {
+        return nullptr;
+    }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;而最后遍历树求值的方法比较简单, 代码就不放了.&lt;/p&gt;
+&lt;p&gt;因为最近才开始学C++, 一些C++11的特性不是很熟悉, 很多还是用写C的经验写的. 代码等熟悉了还可以改进.&lt;/p&gt;
+&lt;h3&gt;总结&lt;/h3&gt;
+&lt;p&gt;这次主要是写了个最简单的parser, 然后解决了表达式计算值的问题, 其实也可以用这个parser转成RPN再求值, 不过那就要多一步stack操作的过程了. 网上的很多人说parser是实现编译器的第零步,这么看起来compiler也挺好玩的, 改天可以写个解析语言或者json这样文本的parser试试.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World]]></title><description><![CDATA[Hello World! This is my first post on my blog!]]></description><link>https://xichen1.github.io/hello-world/</link><guid isPermaLink="false">https://xichen1.github.io/hello-world/</guid><pubDate>Mon, 15 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Hello World!&lt;/h2&gt;
 &lt;p&gt;This is my first post on my blog!&lt;/p&gt;</content:encoded></item></channel></rss>
