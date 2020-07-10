@@ -8,6 +8,7 @@
     "url": "https://github.com/xichen1/xichen1.github.io/issues"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "gatsby": "^2.22.15",
     "gatsby-image": "^2.4.5",
     "gatsby-plugin-feed": "^2.5.3",
@@ -54,7 +55,7 @@
   },
   "scripts": {
     "build": "gatsby build",
-    "develop": "gatsby develop",
+    "develop": "set GATSBY_ENV=production && gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
     "serve": "gatsby serve",
