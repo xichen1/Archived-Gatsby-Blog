@@ -4,21 +4,15 @@ import axios from "axios"
 const Weather = () => {
     const [weather, setWeather] = useState({})
     const api_key = process.env.API_KEY
-
-    const params = {
-          access_key: api_key,
-          query: 'Edmonton'
-      }
-  
+    
     const getweather = () => {
-        axios.get('http://api.weatherstack.com/current', {params})
+        axios.get('https://devapi.heweather.net/v7/weather/now?key=' + api_key + '&location=8C9E4&lang=en')
         .then(response => {
-            const apiResponse = response.data.current
-            console.log(apiResponse)
+            const apiResponse = response.data.now
             const newWeather = {
-                degree: apiResponse.temperature,
-                describe: apiResponse.weather_descriptions,
-                icon: apiResponse.weather_icons
+                feel: apiResponse.feelsLike,
+                temp: apiResponse.temp,
+                describe: apiResponse.text
             }
             setWeather(newWeather)
         })
@@ -30,11 +24,9 @@ const Weather = () => {
         <div style={{marginBottom:'15px'}}>
             <h4 style={{marginBottom: 0}}>Weather in Edmonton</h4>
             <div>
-                {weather.degree}℃, {weather.describe}
+                {weather.temp}℃, feels like {weather.feel}℃,<br /> {weather.describe}
             </div>
-            <img src={weather.icon} 
-                alt="weatherIcon"
-                style={{margin:0}}></img>
+
         </div>
     )
 }
