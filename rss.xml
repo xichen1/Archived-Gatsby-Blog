@@ -1,4 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 13 Jul 2020 02:41:34 GMT</lastBuildDate><item><title><![CDATA[如何写一个简单的parser]]></title><description><![CDATA[起因 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js…]]></description><link>https://xichen1.github.io/simple-parser/</link><guid isPermaLink="false">https://xichen1.github.io/simple-parser/</guid><pubDate>Sun, 21 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;起因&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 02 Aug 2020 10:51:14 GMT</lastBuildDate><item><title><![CDATA[Intro to Express]]></title><description><![CDATA[What is Express? Express is a Web framework based on node.js. It provides ways to recognize and respond to http request through Middleware…]]></description><link>https://xichen1.github.io/intro-to-express/</link><guid isPermaLink="false">https://xichen1.github.io/intro-to-express/</guid><pubDate>Sun, 02 Aug 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;What is Express?&lt;/h3&gt;
+&lt;p&gt;Express is a Web framework based on node.js. It provides ways to recognize and respond to http request through Middleware and Router.&lt;/p&gt;
+&lt;h3&gt;Start&lt;/h3&gt;
+&lt;p&gt;To start using Express, we need to import express and create one instance using express(). To test the application, we also need a port and use the instance to listen to the port. This port can replace the real root dir and simulate the root page of the application.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;const express = require(&amp;#39;express&amp;#39;)
+const app = express()
+const port = 3000
+
+app.listen(port, () =&amp;gt; {
+  console.log(`Example app listening at http://localhost:${port}`)
+})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Routing&lt;/h3&gt;
+&lt;p&gt;Routing is the way to determining the response to the particular request. A route needs one method (GET, POST, PUT), one path and one or more handler callback function(s). An example is:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;app.get(&amp;#39;/&amp;#39;, function(req, res))&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The path represents the location of the request requires to change. The req object represents the HTTP request and res represents the HTTP response that the app will send when it receive a request.&lt;/p&gt;
+&lt;h3&gt;Serving static files&lt;/h3&gt;
+&lt;p&gt;The work of the web application is the process of requests and responses. For example, when we open the main page of one web app, we send a request to GET index.html as a client. If such file is right in local dir, we can use express to get it directly as a static file. For example, if all our front-end file is in the dir path ’~/build’, we can use&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;app.use(express.static(&amp;#39;build&amp;#39;))&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this case, whenever the server receives the request to GET something, it will go to the build folder and look for the responded file. If there is no such file locally, Express will then go to the connected database to look for it through some condition (model schema).&lt;/p&gt;
+&lt;h3&gt;Middleware&lt;/h3&gt;
+&lt;p&gt;Middleware functions are functions that have access to req, res and the ‘next’ function. There are five types of middleware. The next function can assign the direction of the flow. If the middleware does not end the req, res cycle, a next() function is required to continue the flow into the next middleware function.&lt;/p&gt;
+&lt;h4&gt;Application-level middleware&lt;/h4&gt;
+&lt;p&gt;This middleware includes two methods, app.use() and app.METHOD().&lt;/p&gt;
+&lt;p&gt;If the app.use() only has one argument, the callback function, it will be executed every time the app receives a request. If there is the path in the arguments, the function will executed every time the app receives a request on the path.&lt;/p&gt;
+&lt;h4&gt;Router-level middleware&lt;/h4&gt;
+&lt;p&gt;The router middleware needs to be bound to an instance of “require(‘express’).Router()“. It can be seen as a middleware between app middleware and router. The RLM can only perform middleware and routing functions. After we bound the RLM to some routers, we can execute app.use(path, router_instance) and that will execute the corresponding method we bound to RLM instance.&lt;/p&gt;
+&lt;h4&gt;Error-handling middleware&lt;/h4&gt;
+&lt;p&gt;Whenever we catch some error in the middleware and route handlers, we need to pass the error to Express through next(error). The error will then be passed into the build-in error handler. We can also write error handlers and this is the error-handling middleware.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;app.use(function(err, req, res, next) {})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can handle different errors inside the function, and in the end, we can continue to use next(error) to pass the error we cannot handle now to Express.&lt;/p&gt;
+&lt;h3&gt;Handle unknown endpoints&lt;/h3&gt;
+&lt;p&gt;If the client send an request which is not defined in any middleware, we need to handle it by responding a 404. The way to handle writing and adding an unknown endpoint middleware after all app-level middleware and router-level middleware and before Error-handling middleware.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;app.use((request, response) =&amp;gt; {
+    response.status(404).send({ error: &amp;#39;unknown endpoint&amp;#39; })
+})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To learn more about Express, view &lt;a href=&quot;https://expressjs.com/en/5x/api.html&quot;&gt;API reference&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[如何写一个简单的parser]]></title><description><![CDATA[起因 因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js…]]></description><link>https://xichen1.github.io/simple-parser/</link><guid isPermaLink="false">https://xichen1.github.io/simple-parser/</guid><pubDate>Sun, 21 Jun 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;起因&lt;/h3&gt;
 &lt;p&gt;因为最近学了一点js, 准备做几个项目练练手, 就盯上了万年老坑计算器. 说他坑主要是因为可易可难, 如果要加上很多科学计算器的功能估计会很麻烦. 于是我就准备做一个只有最基础四则运算功能的版本. 看了几篇给js初学者看的文章发现基本都是先从基本逻辑讲起, 再不断往上堆功能最后再考虑边际情况. 感觉这种方法又啰嗦又不robust, 就突然想起了大一课上学过一个叫逆波兰表达式的东西(Reverse Polish notation), 貌似能很方便的计算任意的一个expression, 然后我就把js扔在了一边开始研究怎么把给出的一个数学expression转换成RPN形式.&lt;/p&gt;
 &lt;h3&gt;逆波兰表达式(RPN)&lt;/h3&gt;
 &lt;p&gt;逆波兰表达式中的所有符号都在第二个操作数的后面
