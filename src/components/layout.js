@@ -4,6 +4,7 @@ import { Link } from "gatsby"
 import { rhythm } from "../utils/typography"
 import Weather from "./Weather"
 
+
 const Layout = ({ location, title, children }) => {
 
   let header
@@ -40,6 +41,7 @@ const Layout = ({ location, title, children }) => {
       <header>{header}</header>
       <main>{children}</main>
       <footer>
+        {/* {window.location.pathname === '/' ? <Weather /> : null} */}
         <Weather />
         © {new Date().getFullYear()}, Built with
         {` `}

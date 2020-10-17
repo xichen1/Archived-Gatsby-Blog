@@ -1,6 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `PPX Blog`,
+    about: `About Me`,
+    todo: `TODO`,
     author: {
       name: `ppx`,
       summary: `who lives in Edmonton.`,

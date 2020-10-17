@@ -1,4 +1,15 @@
-// Gatsby supports TypeScript natively!
+// import React from "react"
+
+// const TodoList = () => {
+//     return (
+//         <div>
+//             d
+//         </div>
+//     )
+// }
+
+// export default TodoList
+
 import React from "react"
 import { PageProps, Link, graphql } from "gatsby"
 
@@ -6,12 +17,13 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Nav from "../components/nav"
-import { rhythm } from "../utils/typography"
+import AboutMe from '../components/AboutMe'
 
 type Data = {
   site: {
     siteMetadata: {
       title: string
+      about: String
     }
   }
   allMarkdownRemark: {
@@ -31,54 +43,30 @@ type Data = {
   }
 }
 
-const BlogIndex = ({ data, location }: PageProps<Data>) => {
+const about = ({ data, location }: PageProps<Data>) => {
   const siteTitle = data.site.siteMetadata.title
-  const posts = data.allMarkdownRemark.edges
-
-  const PostList = posts.map(({ node }) => {
-    const title = node.frontmatter.title || node.fields.slug
-    return (
-      <article key={node.fields.slug}>
-        <header>
-          <h3
-            style={{
-              marginBottom: rhythm(1 / 4),
-            }}
-          >
-            <Link style={{ boxShadow: `none` }} to={node.fields.slug}>
-              {title}
-            </Link>
-          </h3>
-          <small>{node.frontmatter.date}</small>
-        </header>
-        <section>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: node.frontmatter.description || node.excerpt,
-            }}
-          />
-        </section>
-      </article>
-    )
-  })
 
   return (
+    <React.Fragment>
     <Layout location={location} title={siteTitle}>
       <SEO title="All posts" />
       <Bio />
-      <Nav />
-      {PostList}
+      <Nav/>
+      <AboutMe/>
     </Layout>
+
+    </React.Fragment>
   )
 }
 
-export default BlogIndex
+export default about
 
 export const pageQuery = graphql`
   query {
     site {
       siteMetadata {
         title
+        about
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {

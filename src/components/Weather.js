@@ -71,8 +71,6 @@ const Weather = () => {
                 >
                     <Image fixed={icon} />
                 </a>
-
-
             </div>
         )
     }
