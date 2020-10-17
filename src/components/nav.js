@@ -7,17 +7,6 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { navigate } from 'gatsby'
 
 const theme = createMuiTheme({
-    overrides: {
-        MuiTabs: {
-            indicator: {
-                transition: 'none'
-            }
-        }
-    },
-    // transitions: {
-    //     // So we have `transition: none;` everywhere
-    //     create: () => 'none',
-    // },
     palette: {
         primary: {
             light: '#6573c3',
@@ -30,25 +19,52 @@ const theme = createMuiTheme({
     }
 })
 
-export default function Nav() {
-    let tabValue = 0
-    if (typeof window !== `undefined`) {
-        if (window.location.pathname === '/') {
-            tabValue = 0
-        } else if (window.location.pathname === '/todo') {
-            tabValue = 1
-        } else if (window.location.pathname === '/about') {
-            tabValue = 2
-        }
-    }
+const Nav = ({ routers, currentPage }) => {
+    const [index] = useState(
+        routers.findIndex(r => r.link === currentPage)
+    )
 
-    const [value, setValue] = useState(tabValue)
-    const menuList = { 0: '/', 1: '/todo', 2: '/about' }
-    const handleChange = (event, newValue) => {
-        event.preventDefault()
-        navigate(menuList[newValue])
-        setValue(newValue)
-    }
+    return (
+        <div style={{ 'boxShadow': '0 1px 0 0 #eee' }}>
+
+            <ThemeProvider theme={theme}>
+                <Tabs
+                    value={index}
+                    indicatorColor="primary"
+                    textColor="secondary"
+                    onChange={(_, value) => navigate(routers[value].link)}
+                    centered
+                >
+                    {routers.map(router => (
+                        <Tab label={router.name} key={router.link} />
+                    ))}
+                </Tabs>
+            </ThemeProvider>
+        </div>
+
+    )
+}
+
+export default Nav
+
+    // let tabValue = 0
+    // if (typeof window !== `undefined`) {
+    //     if (window.location.pathname === '/') {
+    //         tabValue = 0
+    //     } else if (window.location.pathname === '/todo') {
+    //         tabValue = 1
+    //     } else if (window.location.pathname === '/about') {
+    //         tabValue = 2
+    //     }
+    // }
+
+    // const [value, setValue] = useState(tabValue)
+    // const menuList = { 0: '/', 1: '/todo', 2: '/about' }
+    // const handleChange = (event, newValue) => {
+    //     event.preventDefault()
+    //     navigate(menuList[newValue])
+    //     setValue(newValue)
+    // }
     // useEffect(() => {
     //     if (window.location.pathname === '/' && value !== 0) {
     //         setValue(0)
@@ -59,28 +75,3 @@ export default function Nav() {
     //     }
 
     // }, [value])
-
-
-
-    return (
-        <div style={{ 'boxShadow': '0 1px 0 0 #eee' }}>
-
-            <ThemeProvider theme={theme}>
-                <Tabs
-                    value={value}
-                    indicatorColor="primary"
-                    textColor="secondary"
-                    onChange={handleChange}
-                    centered
-                >
-
-                    <Tab label="Articals" />
-                    <Tab label="Todo" />
-                    <Tab label="About" />
-                </Tabs>
-            </ThemeProvider>
-        </div>
-
-    )
-}
-

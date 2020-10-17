@@ -12,6 +12,7 @@ type Data = {
   site: {
     siteMetadata: {
       title: string
+      navLinks: [object]
     }
   }
   allMarkdownRemark: {
@@ -34,6 +35,7 @@ type Data = {
 const BlogIndex = ({ data, location }: PageProps<Data>) => {
   const siteTitle = data.site.siteMetadata.title
   const posts = data.allMarkdownRemark.edges
+  const pageInfo = data.site.siteMetadata.navLinks
 
   const PostList = posts.map(({ node }) => {
     const title = node.frontmatter.title || node.fields.slug
@@ -66,7 +68,7 @@ const BlogIndex = ({ data, location }: PageProps<Data>) => {
     <Layout location={location} title={siteTitle}>
       <SEO title="All posts" />
       <Bio />
-      <Nav />
+      <Nav routers={pageInfo} currentPage='/'/>
       {PostList}
     </Layout>
   )
@@ -79,6 +81,10 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         title
+        navLinks{
+          name
+          link
+        }
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {

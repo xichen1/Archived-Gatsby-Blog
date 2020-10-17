@@ -13,6 +13,20 @@ module.exports = {
       twitter: `GbdPpx`,
       github: `xichen1`
     },
+    navLinks: [
+      {
+        name: 'Home',
+        link: '/'
+      },
+      {
+        name: 'Todo',
+        link: '/todo'
+      },
+      {
+        name: 'About',
+        link: '/about'
+      }
+    ],
   },
   plugins: [
     {

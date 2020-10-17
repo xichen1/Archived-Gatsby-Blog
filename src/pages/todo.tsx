@@ -23,6 +23,7 @@ type Data = {
     siteMetadata: {
       title: string
       todo: string
+      navLinks: [object]
     }
   }
   allMarkdownRemark: {
@@ -45,6 +46,7 @@ type Data = {
 const todo = ({ data, location }: PageProps<Data>) => {
   const siteTitle = data.site.siteMetadata.title
   const setContent = data.site.siteMetadata.todo
+  const pageInfo = data.site.siteMetadata.navLinks
 
 
   return (
@@ -52,7 +54,7 @@ const todo = ({ data, location }: PageProps<Data>) => {
     <Layout location={location} title={siteTitle}>
       <SEO title="All posts" />
       <Bio />
-      <Nav/>
+      <Nav routers={pageInfo} currentPage='/todo'/>
       {setContent}
     </Layout>
 
@@ -68,6 +70,10 @@ export const pageQuery = graphql`
       siteMetadata {
         title
         todo
+        navLinks{
+          name
+          link
+        }
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {

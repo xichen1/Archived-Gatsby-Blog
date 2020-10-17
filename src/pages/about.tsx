@@ -23,7 +23,8 @@ type Data = {
   site: {
     siteMetadata: {
       title: string
-      about: String
+      about: string
+      navLinks: [object]
     }
   }
   allMarkdownRemark: {
@@ -45,13 +46,14 @@ type Data = {
 
 const about = ({ data, location }: PageProps<Data>) => {
   const siteTitle = data.site.siteMetadata.title
+  const pageInfo = data.site.siteMetadata.navLinks
 
   return (
     <React.Fragment>
     <Layout location={location} title={siteTitle}>
       <SEO title="All posts" />
       <Bio />
-      <Nav/>
+      <Nav routers={pageInfo} currentPage='/about'/>
       <AboutMe/>
     </Layout>
 
@@ -67,6 +69,10 @@ export const pageQuery = graphql`
       siteMetadata {
         title
         about
+        navLinks{
+            name
+            link
+        }
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
