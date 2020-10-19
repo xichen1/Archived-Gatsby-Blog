@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
 import { rhythm } from "../utils/typography"
-import { useStaticQuery } from 'gatsby'
+import { useStaticQuery, graphql } from 'gatsby'
 import Image from "gatsby-image"
 
 export default function AboutMe() {
@@ -25,7 +25,7 @@ export default function AboutMe() {
     avatar: file(absolutePath: { regex: "/me.jpg/" }) {
       childImageSharp {
         fluid(maxWidth: 400) {
-          ...GatsbyImageSharpFluid
+          ...GatsbyImageSharpFluid_noBase64
         }
       }
     }

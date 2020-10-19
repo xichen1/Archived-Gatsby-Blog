@@ -76,7 +76,7 @@ const Weather = () => {
     }
 
     return (
-        <>{values}</>
+        <React.Fragment>{values}</React.Fragment>
     )
 
 }

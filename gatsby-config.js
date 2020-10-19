@@ -30,11 +30,11 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-plugin-google-analytics`,
+      resolve: `gatsby-plugin-gtag`,
       options: {
-        // The property ID; the tracking code won't be generated without it
-        trackingId: 'UA-145254340-2'
-      }
+        // replace `UA-XXXXXXXXX-X` with your own Google Analytics Tracking ID
+        trackingId: `UA-145254340-2`,
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
