@@ -24,7 +24,7 @@ export default function AboutMe() {
   query {
     avatar: file(absolutePath: { regex: "/me.jpg/" }) {
       childImageSharp {
-        fluid(maxWidth: 400) {
+        fluid {
           ...GatsbyImageSharpFluid_noBase64
         }
       }
