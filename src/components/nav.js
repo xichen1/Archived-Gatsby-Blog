@@ -46,32 +46,3 @@ const Nav = ({ routers, currentPage }) => {
 }
 
 export default Nav
-
-    // let tabValue = 0
-    // if (typeof window !== `undefined`) {
-    //     if (window.location.pathname === '/') {
-    //         tabValue = 0
-    //     } else if (window.location.pathname === '/todo') {
-    //         tabValue = 1
-    //     } else if (window.location.pathname === '/about') {
-    //         tabValue = 2
-    //     }
-    // }
-
-    // const [value, setValue] = useState(tabValue)
-    // const menuList = { 0: '/', 1: '/todo', 2: '/about' }
-    // const handleChange = (event, newValue) => {
-    //     event.preventDefault()
-    //     navigate(menuList[newValue])
-    //     setValue(newValue)
-    // }
-    // useEffect(() => {
-    //     if (window.location.pathname === '/' && value !== 0) {
-    //         setValue(0)
-    //     } else if (window.location.pathname === '/todo' && value !== 1) {
-    //         setValue(1)
-    //     } else if (window.location.pathname === '/about' && value !== 2) {
-    //         setValue(2)
-    //     }
-
-    // }, [value])

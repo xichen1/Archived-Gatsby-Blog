@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `PPX Blog`,
     about: `About Me`,
-    todo: `temp comment area`,
+    tags: `Tags`,
     author: {
       name: `ppx`,
       summary: `who lives in Edmonton.`,
@@ -19,8 +19,8 @@ module.exports = {
         link: '/'
       },
       {
-        name: 'Todo',
-        link: '/todo'
+        name: 'Tags',
+        link: '/tags'
       },
       {
         name: 'About',

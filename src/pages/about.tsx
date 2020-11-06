@@ -1,15 +1,3 @@
-// import React from "react"
-
-// const TodoList = () => {
-//     return (
-//         <div>
-//             d
-//         </div>
-//     )
-// }
-
-// export default TodoList
-
 import React from "react"
 import { PageProps, Link, graphql } from "gatsby"
 

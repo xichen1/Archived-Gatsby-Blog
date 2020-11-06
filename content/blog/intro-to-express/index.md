@@ -2,6 +2,7 @@
 title: Intro to Express
 date: "2020-08-02"
 description: "backend"
+tags: ["backend", "express", "introduction"]
 ---
 
 ### What is Express?
@@ -77,4 +78,3 @@ app.use((request, response) => {
 ```
 
 To learn more about Express, view [API reference](https://expressjs.com/en/5x/api.html).
-
