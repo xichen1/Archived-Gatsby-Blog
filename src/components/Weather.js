@@ -54,8 +54,8 @@ const Weather = () => {
                 .test(edge.node.relativePath))
         const icon = (edges[0].node.childImageSharp.fixed)
         values = (
-            <div>
-                <h4 style={{ marginBottom: 0 }}>Weather in Edmonton</h4>
+            <div style={{ boxShadow: '0 -1px 0 0 #eee' }}>
+                <h4 style={{ paddingTop: "1rem", marginBottom: 0 }}>Weather in Edmonton</h4>
                 <div>
                     {weather.temp}℃, feels like {weather.feel}℃,<br />
                     {weather.describe}, with {weather.wind} km/h wind

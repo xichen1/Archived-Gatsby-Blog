@@ -7,6 +7,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Nav from "../components/nav"
 import { rhythm } from "../utils/typography"
+import Weather from "../components/Weather"
 
 type Data = {
   site: {
@@ -70,6 +71,7 @@ const BlogIndex = ({ data, location }: PageProps<Data>) => {
       <Bio />
       <Nav routers={pageInfo} currentPage='/'/>
       {PostList}
+      <Weather />
     </Layout>
   )
 }

@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "gatsby"
 
 import { rhythm } from "../utils/typography"
-import Weather from "./Weather"
+
 
 
 const Layout = ({ location, title, children }) => {
@@ -42,7 +42,6 @@ const Layout = ({ location, title, children }) => {
       <main>{children}</main>
       <footer>
         {/* {window.location.pathname === '/' ? <Weather /> : null} */}
-        <Weather />
         © {new Date().getFullYear()}, Built with
         {` `}
         <a href="https://www.gatsbyjs.org">Gatsby</a>

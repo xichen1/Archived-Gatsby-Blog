@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `PPX Blog`,
     about: `About Me`,
-    todo: `TODO`,
+    todo: `temp comment area`,
     author: {
       name: `ppx`,
       summary: `who lives in Edmonton.`,

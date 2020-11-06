@@ -12,6 +12,7 @@
 
 import React from "react"
 import { PageProps, Link, graphql } from "gatsby"
+import { DiscussionEmbed } from "disqus-react"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -48,6 +49,10 @@ const todo = ({ data, location }: PageProps<Data>) => {
   const setContent = data.site.siteMetadata.todo
   const pageInfo = data.site.siteMetadata.navLinks
 
+  const disqusConfig = {
+    shortname: process.env.GATSBY_DISQUS_NAME,
+    config: {identifier: "about"}
+  }
 
   return (
     <React.Fragment>
@@ -55,9 +60,9 @@ const todo = ({ data, location }: PageProps<Data>) => {
       <SEO title="All posts" />
       <Bio />
       <Nav routers={pageInfo} currentPage='/todo'/>
-      {setContent}
+      <h2>{setContent}</h2>
+      <DiscussionEmbed {...disqusConfig} />
     </Layout>
-
     </React.Fragment>
   )
 }
