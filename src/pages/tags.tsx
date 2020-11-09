@@ -1,9 +1,9 @@
 import React from "react"
-import { Helmet } from "react-helmet"
 import PropTypes from "prop-types"
-import { graphql, Link, navigate } from "gatsby"
+import { graphql, navigate } from "gatsby"
 import { DiscussionEmbed } from "disqus-react"
 import Chip from '@material-ui/core/Chip';
+import { makeStyles } from '@material-ui/core/styles';
 
 import kebabCase from 'lodash/kebabCase'
 
@@ -11,20 +11,20 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Nav from "../components/nav"
 
-type Data = {
-  site: {
-    siteMetadata: {
-      title: string
-      tags: string
-      navLinks: [object]
-    }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    marginBottom: theme.spacing(1),
   },
-  allMarkdownRemark: {
-    group: [object]
+  tag: {
+    margin: theme.spacing(0.5),
+    color: '#007acc',
+    fontFamily: `Merriweather,Georgia,serif`,
   }
-}
-
-
+}));
 
 const TagsPage = ({ data, location, data: {
   allMarkdownRemark: { group },
@@ -41,20 +41,28 @@ const TagsPage = ({ data, location, data: {
     config: {identifier: "about"}
   }
 
+
+
+  const classes = useStyles();
+
   return (
     <React.Fragment>
     <Layout location={location} title={siteTitle}>
       <Bio />
       <Nav routers={pageInfo} currentPage='/tags'/>
       <h2>{setContent}</h2>
+      <div className={classes.root}>
       {group.map(tag => (
           <span key={tag.fieldValue}>
             <Chip 
+            className={classes.tag}
             label={`${tag.fieldValue} (${tag.totalCount})`}
             onClick={() => {navigate(`/tags/${kebabCase(tag.fieldValue)}/`)}}
             />
           </span>
         ))}
+      </div>
+
       <DiscussionEmbed {...disqusConfig} />
     </Layout>
     </React.Fragment>
