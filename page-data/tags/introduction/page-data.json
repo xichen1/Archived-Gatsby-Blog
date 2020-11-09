@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-js","path":"/tags/introduction","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/intro-to-express/"},"frontmatter":{"title":"Intro to Express","description":"backend","date":"August 02, 2020"}}}]}},"pageContext":{"tag":"introduction"}}}

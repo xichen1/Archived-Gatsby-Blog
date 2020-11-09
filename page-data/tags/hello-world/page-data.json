@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-js","path":"/tags/hello-world","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/hello-world/"},"frontmatter":{"title":"Hello World","description":"Hello World","date":"June 15, 2020"}}}]}},"pageContext":{"tag":"hello world"}}}
