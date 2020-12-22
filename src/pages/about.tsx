@@ -1,11 +1,13 @@
 import React from "react"
 import { PageProps, Link, graphql } from "gatsby"
+import { ThemeProvider } from '@material-ui/styles'
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Nav from "../components/nav"
 import AboutMe from '../components/AboutMe'
+import theme from "../utils/MaterialTheme"
 
 type Data = {
   site: {
@@ -38,13 +40,14 @@ const about = ({ data, location }: PageProps<Data>) => {
 
   return (
     <React.Fragment>
-    <Layout location={location} title={siteTitle}>
-      <SEO title="All posts" />
-      <Bio />
-      <Nav routers={pageInfo} currentPage='/about'/>
-      <AboutMe/>
-    </Layout>
-
+      <ThemeProvider theme={theme}>
+        <Layout location={location} title={siteTitle}>
+          <SEO title="All posts" />
+          <Bio />
+          <Nav routers={pageInfo} currentPage='/about'/>
+          <AboutMe/>
+        </Layout>
+      </ThemeProvider>
     </React.Fragment>
   )
 }

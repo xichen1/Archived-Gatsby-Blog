@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios"
 import { graphql, useStaticQuery } from 'gatsby'
-import Image from "gatsby-image"
+import Img from "gatsby-image"
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const Weather = () => {
@@ -46,7 +47,11 @@ const Weather = () => {
 
     let values
     if ((Object.keys(weather)).length === 0) {
-        values = <></>
+        values =
+            (<div style={{ boxShadow: '0 -1px 0 0 #eee' }}>
+                <h4 style={{ paddingTop: "1rem", marginBottom: 0 }}>Weather in Edmonton</h4>
+                <CircularProgress color="secondary" />
+            </div>)
     } else {
         const num = weather.icon
         const edges = data.allFile.edges
@@ -69,7 +74,7 @@ const Weather = () => {
                         color: 'transparent'
                     }}
                 >
-                    <Image fixed={icon} />
+                    <Img fixed={icon} />
                 </a>
             </div>
         )

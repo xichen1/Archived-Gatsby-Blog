@@ -10,6 +10,7 @@ import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
 
 
+
 const useStyles = makeStyles((theme) => ({
   tags: {
     display: 'flex',

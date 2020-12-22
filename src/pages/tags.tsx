@@ -3,13 +3,15 @@ import PropTypes from "prop-types"
 import { graphql, navigate } from "gatsby"
 import { DiscussionEmbed } from "disqus-react"
 import Chip from '@material-ui/core/Chip';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, rgbToHex } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles'
 
 import kebabCase from 'lodash/kebabCase'
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Nav from "../components/nav"
+import theme from "../utils/MaterialTheme"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +19,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(6),
+    paddingBottom: theme.spacing(2),
+    boxShadow: 'rgb(238, 238, 238) 0px 1px 0px 0px',
   },
   tag: {
     margin: theme.spacing(0.5),
@@ -47,6 +51,7 @@ const TagsPage = ({ data, location, data: {
 
   return (
     <React.Fragment>
+    <ThemeProvider theme={theme}>
     <Layout location={location} title={siteTitle}>
       <Bio />
       <Nav routers={pageInfo} currentPage='/tags'/>
@@ -65,6 +70,7 @@ const TagsPage = ({ data, location, data: {
 
       <DiscussionEmbed {...disqusConfig} />
     </Layout>
+    </ThemeProvider>
     </React.Fragment>
   )
 }

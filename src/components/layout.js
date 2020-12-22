@@ -5,6 +5,7 @@ import { rhythm } from "../utils/typography"
 
 
 
+
 const Layout = ({ location, title, children }) => {
 
   let header
@@ -29,6 +30,7 @@ const Layout = ({ location, title, children }) => {
   )
   // }
   return (
+
     <div
       style={{
         marginLeft: `auto`,
