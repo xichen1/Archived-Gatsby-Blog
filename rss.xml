@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 09 Nov 2020 06:19:49 GMT</lastBuildDate><item><title><![CDATA[Intro to Express]]></title><description><![CDATA[What is Express? Express is a Web framework based on node.js. It provides ways to recognize and respond to http request through Middleware…]]></description><link>https://xichen1.github.io/intro-to-express/</link><guid isPermaLink="false">https://xichen1.github.io/intro-to-express/</guid><pubDate>Sun, 02 Aug 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;What is Express?&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 22 Dec 2020 14:02:12 GMT</lastBuildDate><item><title><![CDATA[MIT 6.828 Lab 1 Note]]></title><description><![CDATA[Introduction From today, I am going to share my experience in learning, implementing labs of MIT 6.828 in my blog. My background knowledge…]]></description><link>https://xichen1.github.io/6.828-lab1-note/</link><guid isPermaLink="false">https://xichen1.github.io/6.828-lab1-note/</guid><pubDate>Tue, 22 Dec 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;From today, I am going to share my experience in learning, implementing labs of MIT 6.828 in my blog.&lt;/p&gt;
+&lt;p&gt;My background knowledge includes: C, computer architecture, RISC-V.&lt;/p&gt;
+&lt;p&gt;I am going to use 2018 version material simply because there are most amount of resource about this version online.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://pdos.csail.mit.edu/6.828/2018/schedule.html&quot;&gt;Course homepage&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://pdos.csail.mit.edu/6.828/2018/labs/lab1/&quot;&gt;lab1 page&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Environment setup&lt;/h2&gt;
+&lt;p&gt;First clone the course git repo, &lt;a href=&quot;https://pdos.csail.mit.edu/6.828/2018/jos.git&quot;&gt;Course Git reop&lt;/a&gt;. Then install toolchain, &lt;a href=&quot;https://pdos.csail.mit.edu/6.828/2018/tools.html&quot;&gt;install instruction&lt;/a&gt;. Note that if the Compiler Toolchain is already installed, the only thing needs to be installed is QEMU emulator. Next, lets compile the files in the Git repo.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;sudo apt install gcc-multilib # if you are not under 32 bit environment
+cd lab
+make&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then type&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;make qemu&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We will successfully start JOS in the QEMU emulator. Now we boot the template OS and finish the setup of environment and lets take a look at the memory distribution in 32-bit machine.&lt;/p&gt;
+&lt;h2&gt;PC’S address space &amp;#x26; PC start up process&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 480px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/55d5a040844645afe803a9725e8cac59/e85cb/pcmemory.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 120.27027027027026%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAYCAYAAAD6S912AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC00lEQVQ4y41Vi3KjMAzM///hdabtJeEZMG8MGIhuV0Aa0vQaz6g86iyrXUk+yPUqwzBoOOdkmiYN3m/vx3GUqqokNYmYBJEaqZtGLnEkdd0I1xU4XIfrPEnXtjLjeRydpGkqcRQrIDe1bYf7UbquA0itezvbSd/3kmeZWLzfA06j9NZKnpfy9/NT/DCQP29vcjyepAc7a3tl/L+1gd0A+VWuqsjlcrlIgrS6ftB3ZDiO0+2Hz2LHUK6z1NCHWlgwZWqMFh+p6xra1TLP129MfloH/qHwBGA0EJuxPfN/9+x+B8QmAhRlqU6S1cKs0ndkfp/WI/Bj+qqhBaC6DGeVIUCGwekPmsb+quED4KQuc824z42RDOHcArK4PMurC3U4i20bLZFnhd22Vq9FUYp39lAFiUqR5Ub8IJI0SSFLpbWbJGZhyJT3dfV1rymjsJk2q0A7Cg3g3IBq6PV5I8AG0E6xakqt5VMWhZpS4MpN7QuFvU95YusRsLrpV1YlUotl6F/vlC9TVoY/Vdji8gjQUfuXwdT5bhsc96A3U5g/U83Q8GWx1CQ3b6ZUYO0Hvvi+J8e/R/R+LmEQ6NR5mDaztGsdlnDP9wNJ0M9Znq0M20VLdA1l4MiKo0glMphMIdwdnLuBqoZD3ykjDgWCpph3FwXN1UkC9tizsC90bDX4AFlnWb5L+zCv4ys1mXx+vIOhL1F0kY/3D4nBiC6zbCZo7daBq9qByKKj27WmptzZVr+YgmGRg0FeaA+z1r40rOTsnVTDE2YlmVGa0+msTXEHiLIBQwKGYYS0UzmvHcEJTsBFw0Y1pH5RGEKaCqBGoniZ7nvA9Qh4Vl/WdvoDzkgCGJMijJpFPQ30dPcabhObeEyXhniBpwZsE/uV4fDtkJpAkeNLhXbDekixRpdDigXNdiQ7Bp8fB68yXI7R/naMMsb1en+80pQAzH3vLB6MYAc9Oxb+AbbxTxK8dKi0AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;PC&amp;#39;s physical address&quot;
+        title=&quot;PC&amp;#39;s physical address&quot;
+        src=&quot;/static/55d5a040844645afe803a9725e8cac59/e85cb/pcmemory.png&quot;
+        srcset=&quot;/static/55d5a040844645afe803a9725e8cac59/12f09/pcmemory.png 148w,
+/static/55d5a040844645afe803a9725e8cac59/e4a3f/pcmemory.png 295w,
+/static/55d5a040844645afe803a9725e8cac59/e85cb/pcmemory.png 480w&quot;
+        sizes=&quot;(max-width: 480px) 100vw, 480px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The important part for PC start up is only the lower 1MB part, because right now CPU is under Real mode and the only accessible memory is this part. In this part, the most important on is BIOS (basic IO system), because code in BIOS starts the normal PC start up. And the other part of this 1MB memory is mapped by peripherals, which means CPU can read/write the other part to manipulate peripherals.&lt;/p&gt;
+&lt;h4&gt;An interesting history&lt;/h4&gt;
+&lt;p&gt;The max memory 32-bit processor can handle is 4GB. So when the 64-bit processor came out, larger memory were used in PC. The modern PC usually put BIOS at the top of the memory, and to keep the backward compatibility for some old software, designer keeps a “hole” from 0x000A0000 to 0x00100000.&lt;/p&gt;
+&lt;h3&gt;Use GDB to analyze the process of start up&lt;/h3&gt;
+&lt;p&gt;Now open two terminals, move into the OS folder. In the first one, type&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;make qemu-nox-gdb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This line starts the emulator and waits for the connection of GDB. And in the second terminal, type&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;make gdb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This line starts GDB and connect it to the OS. The file .gdbinit configs GDB to debug the code executed in the boot of OS in QEMU.&lt;/p&gt;
+&lt;h4&gt;Very first instruction&lt;/h4&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;[f000:fff0]    0xffff0:	ljmp   $0x3630,$0xf000e05b&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is the first line appears after we connect GDB and OS. It shows where does the processor fetch the very first instruction and what that instruction is when we boot a PC.&lt;/p&gt;
+&lt;p&gt;Under the real mode, address is in the form of (segment base : offset). So in the above line, in [f000:fff0], 0xf000 is segment base and 0xfff0 is offset. For 0x3630, 0xf000e05b, 0x3630 is segment base and 0xf000e05b is offset. The way to transfer this form into physical form is:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;phyAddr = 16 * segment + offset = 16 * CS + IP&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And after translating, this line means the professor fetch instruction from address 0xFFFF0, and instruction inside is a jump instruction, and the target address is 0xF004 435B.&lt;/p&gt;
+&lt;p&gt;So there is several natural questions:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Why did the designer put the very first instruction in this location (distance between here and end of BIOS is 0x100000 - 0xFFFF0 = 16 bytes)?&lt;/li&gt;
+&lt;li&gt;Why don’t just put this instruction in the beginning of the BIOS?&lt;/li&gt;
+&lt;li&gt;Considering it is a jump instruction, why not set the first instruction just at its target address?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The first two questions can be answered together. We have to consider that each PC company has their own BIOS code, user can add BIOS code too. Also, different company designs different length of BIOS boot code, so if the user wants to add code, the place to add is uncertain. However, if instead, we put user created code in the beginning of BIOS, it is more convenient to manage. So normally we put BIOS boot code in the end of BIOS part.&lt;/p&gt;
+&lt;p&gt;For the last question, because different PC has different length of BIOS boot code, for example, if this code is 1KB, the start address is 0x100000 - 0x400 = 0xFFC00. If the code is 2KB, the start address is 0xFF800. And it is not a good practice to adjust the first instruction address in each PC. So the rule is put a jump instruction at 0xFFFF0 and the target is defined by each company.&lt;/p&gt;
+&lt;h2&gt;TO BE CONTINUE&lt;/h2&gt;</content:encoded></item><item><title><![CDATA[Intro to Express]]></title><description><![CDATA[What is Express? Express is a Web framework based on node.js. It provides ways to recognize and respond to http request through Middleware…]]></description><link>https://xichen1.github.io/intro-to-express/</link><guid isPermaLink="false">https://xichen1.github.io/intro-to-express/</guid><pubDate>Sun, 02 Aug 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;What is Express?&lt;/h3&gt;
 &lt;p&gt;Express is a Web framework based on node.js. It provides ways to recognize and respond to http request through Middleware and Router.&lt;/p&gt;
 &lt;h3&gt;Start&lt;/h3&gt;
 &lt;p&gt;To start using Express, we need to import express and create one instance using express(). To test the application, we also need a port and use the instance to listen to the port. This port can replace the real root dir and simulate the root page of the application.&lt;/p&gt;
