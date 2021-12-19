@@ -3,7 +3,7 @@ import axios from "axios"
 import { graphql, useStaticQuery } from 'gatsby'
 import Img from "gatsby-image"
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import "../../node_modules/qweather-icons/font/qweather-icons.css"
 
 const Weather = () => {
     const [weather, setWeather] = useState({})
@@ -17,6 +17,8 @@ const Weather = () => {
             node {
               relativePath
               name
+              publicURL
+              extension
               childImageSharp {
                 fixed(width: 50 height: 50) {
                     ...GatsbyImageSharpFixed
@@ -34,7 +36,7 @@ const Weather = () => {
                 const newWeather = {
                     feel: apiResponse.feelsLike,
                     temp: apiResponse.temp,
-                    describe: apiResponse.text,
+                    text: apiResponse.text ? apiResponse.text : "cloudy",
                     icon: apiResponse.icon,
                     wind: apiResponse.windSpeed
                 }
@@ -55,15 +57,25 @@ const Weather = () => {
     } else {
         const num = weather.icon
         const edges = data.allFile.edges
-            .filter(edge => new RegExp("weather/" + num + ".png")
+            .filter(edge => new RegExp("weather/" + num + ".svg")
                 .test(edge.node.relativePath))
-        const icon = (edges[0].node.childImageSharp.fixed)
+        let icon;
+        if (!edges[0].node.childImageSharp) {
+            icon = <img
+                style={{
+                    width: 50, color: 'transparent'
+                }}
+                src={edges[0].node.publicURL}
+                alt="weather-icon" />
+        } else {
+            icon = <Img fixed={edges[0].node.childImageSharp.fixed} />
+        }
         values = (
             <div style={{ boxShadow: '0 -1px 0 0 #eee' }}>
                 <h4 style={{ paddingTop: "1rem", marginBottom: 0 }}>Weather in Edmonton</h4>
                 <div>
                     {weather.temp}℃, feels like {weather.feel}℃,<br />
-                    {weather.describe}, with {weather.wind} km/h wind
+                    {weather.text}, with {weather.wind} km/h wind
                 </div>
                 <a
                     href='https://weather.gc.ca/city/pages/ab-50_metric_e.html'
@@ -74,7 +86,7 @@ const Weather = () => {
                         color: 'transparent'
                     }}
                 >
-                    <Img fixed={icon} />
+                    {icon}
                 </a>
             </div>
         )
@@ -86,4 +98,4 @@ const Weather = () => {
 
 }
 
-export default Weather 
+export default Weather
