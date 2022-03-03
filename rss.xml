@@ -1,4 +1,79 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 19 Dec 2021 10:46:59 GMT</lastBuildDate><item><title><![CDATA[Database Design and Implementation Note]]></title><description><![CDATA[In this post, I will record the notes when reading the book Database design and implementation (Sciore 2020). It mainly includes the points…]]></description><link>https://xichen1.github.io/dataBase-design-and-implementation-note/</link><guid isPermaLink="false">https://xichen1.github.io/dataBase-design-and-implementation-note/</guid><pubDate>Sat, 09 Oct 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;In this post, I will record the notes when reading the book Database design and implementation (Sciore 2020). It mainly includes the points I feel important or unclear before reading the book. &lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 03 Mar 2022 20:25:13 GMT</lastBuildDate><item><title><![CDATA[在m1安装mongodb遇到的一些坑]]></title><description><![CDATA[安装流程 install home brew    坑 Two ways to start service 根据mongodb文档, step 3和step 4中间还有一步 .  我们首先需要知道mongodb有两部分构成, server和client. 开启server…]]></description><link>https://xichen1.github.io/mongodb-install-issue/</link><guid isPermaLink="false">https://xichen1.github.io/mongodb-install-issue/</guid><pubDate>Thu, 03 Mar 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;安装流程&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;install home brew&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew tap mongodb/brew&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew install mongodb-community@5.0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew services list&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;坑&lt;/h2&gt;
+&lt;h3&gt;Two ways to start service&lt;/h3&gt;
+&lt;p&gt;根据&lt;a href=&quot;https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/&quot;&gt;mongodb文档&lt;/a&gt;, step 3和step 4中间还有一步 &lt;code class=&quot;language-text&quot;&gt;brew services start mongodb-community@5.0&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;我们首先需要知道mongodb有两部分构成, server和client. 开启server的命令为 &lt;code class=&quot;language-text&quot;&gt;mongod (other parameters...)&lt;/code&gt;, 开启client的命令为&lt;code class=&quot;language-text&quot;&gt;mongo&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;而官网所说的&lt;code class=&quot;language-text&quot;&gt;brew services start mongodb-community@5.0&lt;/code&gt; 其实会直接运行default mongod command. 而默认的server db存储位置为&lt;code class=&quot;language-text&quot;&gt;/data/db&lt;/code&gt;.  &lt;code class=&quot;language-text&quot;&gt;/&lt;/code&gt; 是mac的read-only space, 我们不可以在这里mkdir, 而他本来就没有/data/db这个folder, 所以我们运行官网给出的&lt;code class=&quot;language-text&quot;&gt;brew services start mongodb-community@5.0&lt;/code&gt; 后再运行 &lt;code class=&quot;language-text&quot;&gt;brew services list&lt;/code&gt; 就会显示 3584 error.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 590px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/e464eb4b23519c39af0c037bddccc085/8efc2/error.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 22.972972972972975%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAABKElEQVQY0z2Q207CQBiE+wxAz90ewFpIhAi2WMqhSBE5KQlc+Bhe+lo+ij6M15+7JfFispM/M//Mv9rv9zs/Xyf8XoT/2MN7iIl7CWW55G4wIJ9MmM7ntDsdxnlOXhT4QYBl29iOc4V7fS0J7fPjxPmQYdgWTiBwQg9XeIRRhCdEbQ7CEMd15VxgWhYtXafZatXckGhIrhuGXGijVZsjt90+jWYTy7IxTSkyzVqgxIoro4LreYzSlMHwnlGW1kE3cUw2HpN0u3VL7XI5k0qRaqIgfJ+w3f7nyqSEpjxRNV4UU9blE/vnF5IkqRcdjkdm8lsi6dPmZclmu2W3P5BmGcVsxuvbiVVVkcrkVbWuzzcsE+G4DI2Avi4Y6j4NeboKVq0XyyXb3Z4/89aVW7+m22gAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;error&quot;
+        title=&quot;error&quot;
+        src=&quot;/static/e464eb4b23519c39af0c037bddccc085/fcda8/error.png&quot;
+        srcset=&quot;/static/e464eb4b23519c39af0c037bddccc085/12f09/error.png 148w,
+/static/e464eb4b23519c39af0c037bddccc085/e4a3f/error.png 295w,
+/static/e464eb4b23519c39af0c037bddccc085/fcda8/error.png 590w,
+/static/e464eb4b23519c39af0c037bddccc085/8efc2/error.png 828w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;Fail to stop service&lt;/h3&gt;
+&lt;p&gt;当使用&lt;code class=&quot;language-text&quot;&gt;brew services start mongodb-community@5.0&lt;/code&gt; 时我们可以用 &lt;code class=&quot;language-text&quot;&gt;brew services stop mongodb-community@5.0&lt;/code&gt; 停止server.&lt;/p&gt;
+&lt;p&gt;当使用 &lt;code class=&quot;language-text&quot;&gt;mongod (other parameters..)&lt;/code&gt;时我们有两种方法停止server.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl+C on the terminal which is running mongod&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;open a new terminal&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;type &lt;code class=&quot;language-text&quot;&gt;mongo&lt;/code&gt; and hit enter&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;use admin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;db.shutdownServer()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;填坑&lt;/h2&gt;
+&lt;p&gt;很简单, 不使用brew services start即可. 我们可以使用&lt;code class=&quot;language-text&quot;&gt;sudo mkdir -p /System/Volumes/Data/data/db&lt;/code&gt; 在可写区域创建好db储存的文件夹. 然后用&lt;code class=&quot;language-text&quot;&gt;sudo mongod --dbpath /System/Volumes/Data/data/db&lt;/code&gt; 指定server运行时的数据位置. 这时使用&lt;code class=&quot;language-text&quot;&gt;brew services list&lt;/code&gt; 则会显示service status started. 之后就可以打开另一个terminal开启client了!&lt;/p&gt;
+&lt;p&gt;注意: 在做这些事前请确保没有正在运行的mongod(server service).&lt;/p&gt;
+&lt;h2&gt;卸载流程&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl list | grep mongo&lt;/code&gt; to check the running mongo service&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist&lt;/code&gt; based on which file exists in &lt;code class=&quot;language-text&quot;&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;rm -f ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl remove homebrew.mxcl.mongodb&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;pkill -f mongod&lt;/code&gt;  Kill all the processes related to mongod&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew uninstall mongodb&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;rm -rf /opt/homebrew/var/mongodb&lt;/code&gt; Data Directory&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew cleanup -s mongodb-community&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew cleanup --prune-prefix&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Resource&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;https://docs.mongodb.com/manual/tutorial/manage-mongodb-processes/
+https://www.mongodb.com/community/forums/t/help-brew-mongodb-community-5-0-error-macos/125648
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
+https://rajanmaharjan.medium.com/uninstall-mongodb-macos-completely-d2a6d6c163f9&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Design and Implementation Note]]></title><description><![CDATA[In this post, I will record the notes when reading the book Database design and implementation (Sciore 2020). It mainly includes the points…]]></description><link>https://xichen1.github.io/dataBase-design-and-implementation-note/</link><guid isPermaLink="false">https://xichen1.github.io/dataBase-design-and-implementation-note/</guid><pubDate>Sat, 09 Oct 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;In this post, I will record the notes when reading the book Database design and implementation (Sciore 2020). It mainly includes the points I feel important or unclear before reading the book. &lt;/p&gt;
 &lt;p&gt;The current version starts from chapter 2 since chapter 1 is more like the environment and conclusion   content. So let’s start.&lt;/p&gt;
 &lt;h2&gt;Chapter 2 JDBC&lt;/h2&gt;
 &lt;h3&gt;Concepts&lt;/h3&gt;
