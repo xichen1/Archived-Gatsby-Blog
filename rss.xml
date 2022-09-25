@@ -1,4 +1,225 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 03 Mar 2022 20:25:13 GMT</lastBuildDate><item><title><![CDATA[在m1安装mongodb遇到的一些坑]]></title><description><![CDATA[安装流程 install home brew    坑 Two ways to start service 根据mongodb文档, step 3和step 4中间还有一步 .  我们首先需要知道mongodb有两部分构成, server和client. 开启server…]]></description><link>https://xichen1.github.io/mongodb-install-issue/</link><guid isPermaLink="false">https://xichen1.github.io/mongodb-install-issue/</guid><pubDate>Thu, 03 Mar 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;安装流程&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[PPX Blog]]></title><description><![CDATA[PPX's blog]]></description><link>https://xichen1.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 25 Sep 2022 06:05:08 GMT</lastBuildDate><item><title><![CDATA[Using Docker with Postgres]]></title><description><![CDATA[Intro Using Docker container to implement a PostgreSQL is not quite easy for a newcomer in Docker. Especially for those who are not familar…]]></description><link>https://xichen1.github.io/Docker-with-postgres/</link><guid isPermaLink="false">https://xichen1.github.io/Docker-with-postgres/</guid><pubDate>Sat, 24 Sep 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;Using Docker container to implement a PostgreSQL is not quite easy for a newcomer in Docker. Especially for those who are not familar with Database, it’s very hard to configure and set everything correct. So that’s why this artical is created. Let’s start from a simple docker compose file.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Docker compose’s initialization&lt;/h2&gt;
+&lt;p&gt;If you are not using a dockerfile to creating a Postgre image, instead, you are using docker compose file to directly a Postgre container, a lot of things will be done by the Docker itself. For example the &lt;code class=&quot;language-text&quot;&gt;host name&lt;/code&gt; of the database is the &lt;code class=&quot;language-text&quot;&gt;container_name&lt;/code&gt; you set for the db container. &lt;/p&gt;
+&lt;h4&gt;User, password and Database&lt;/h4&gt;
+&lt;p&gt;It will also generate a user using the password and database name you provided in the envrionment variables.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testdb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Connection db&lt;/h4&gt;
+&lt;p&gt;So when you are writing the backend code to connect the database, you can use these values for connection. &lt;/p&gt;
+&lt;p&gt;A example with gorm in Golang is:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;import (
+        &amp;quot;gorm.io/driver/postgres&amp;quot;
+        &amp;quot;gorm.io/gorm&amp;quot;
+)
+
+dsn := &amp;quot;postgres://postgres:pass@test-postgres/testdb&amp;quot;
+db, err = gorm.Open(postgres.Open(dsn), &amp;amp;gorm.Config{})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Database initilization&lt;/h4&gt;
+&lt;p&gt;To initilizate a database, you can use Docker volumes.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testdb
+    volumes:
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  postgres:&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this, init.sql will be run once the container starts.&lt;/p&gt;
+&lt;p&gt;Notice: When the database container’s data directory is empty, the initilization script/sql won’t be run.&lt;/p&gt;
+&lt;h4&gt;networks and ports&lt;/h4&gt;
+&lt;p&gt;If you want to use container’s name as the host name and provide another container from same or different networks the access to the postgres db, you need to setup network and ports.&lt;/p&gt;
+&lt;p&gt;Using &lt;code class=&quot;language-text&quot;&gt;networks&lt;/code&gt;, all containers in the same compose fill will be running under the same specified network, which allows to call host name directly.&lt;/p&gt;
+&lt;p&gt;Using &lt;code class=&quot;language-text&quot;&gt;ports&lt;/code&gt;, you can specify the outside port the postgres container. So when a service from different network trying to access the postgres db, it can use that port.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testdb
+    volumes:
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - test-network
+volumes:
+  postgres:
+
+networks:
+  test-network:
+    name: test-network&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;First come first served&lt;/h2&gt;
+&lt;p&gt;Docker enables the dependency feature which allows you specify which service to run first and second. This is important because database’s initialization may take time and is usually slower than the startup of backend services.&lt;/p&gt;
+&lt;p&gt;However, the dependency only makes sure which services will run first, but Postgres container won’t give a sign that the initialization is done. Docker compose will only know when database service is started successfully and will let it finish the remaining job, and start the next service. &lt;/p&gt;
+&lt;p&gt;So usually when Docker starts the backend service, the init process isn’t done, which will cause various errors such as &lt;code class=&quot;language-text&quot;&gt;dial tcp [::1]:5432: connect: connection refused docker&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;FATAL:  role &amp;quot;root&amp;quot; does not exist&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;I chose &lt;code class=&quot;language-text&quot;&gt;health check&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;condition depend&lt;/code&gt; on in Docker to solve the problem.&lt;/p&gt;
+&lt;h4&gt;Healthcheck&lt;/h4&gt;
+&lt;p&gt;The healthcheck feature in Docker will check run some user defined commands and see if there is any error (exit code 1) returned depending on the timeout, intervals, and retries you set.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testdb
+    volumes:
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - test-network
+    healthcheck:
+      test: [&amp;quot;CMD-SHELL&amp;quot;, &amp;quot;pg_isready -U postgres&amp;quot;]
+
+volumes:
+  postgres:
+
+networks:
+  test-network:
+    name: test-network&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Conditional depends on&lt;/h4&gt;
+&lt;p&gt;As I mentioned before the &lt;code class=&quot;language-text&quot;&gt;depends on&lt;/code&gt; in Docker compose is not working well. However, we can add some condition to it and make it working with healthcheck.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  backendserver:
+    build: &amp;quot;.&amp;quot;
+    ports:
+      - &amp;quot;8080:8080&amp;quot;
+    depends_on:
+      postgres:
+        condition: service_healthy
+    network:
+      - test-network&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It will run the health check command in the service &lt;code class=&quot;language-text&quot;&gt;postgres&lt;/code&gt; and will only start this service if the condition is passed.&lt;/p&gt;
+&lt;h2&gt;Some other points when configing Docker with Postgres&lt;/h2&gt;
+&lt;p&gt;Some other things I may mention next time include &lt;code class=&quot;language-text&quot;&gt;environment variables&lt;/code&gt;, other usage of volums and how to set correct interval, timeout and retires in healthcheck.&lt;/p&gt;
+&lt;h2&gt;Appendix&lt;/h2&gt;
+&lt;h3&gt;Full docker compose file&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;quot;3.6&amp;quot;
+services:
+  postgres:
+    image: postgres:latest
+    container_name: test-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testdb
+    volumes:
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - test-network
+    healthcheck:
+      test: [&amp;quot;CMD-SHELL&amp;quot;, &amp;quot;pg_isready -U postgres&amp;quot;]
+
+  backendserver:
+    build: &amp;quot;.&amp;quot;
+    ports:
+      - &amp;quot;8080:8080&amp;quot;
+    depends_on:
+      postgres:
+        condition: service_healthy
+    network:
+      - test-network
+
+volumes:
+  postgres:
+
+networks:
+  test-network:
+    name: test-network&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[A web service deployed on Raspberry Pi based on Nginx]]></title><description><![CDATA[Prepare the Raspberry Pi install the Raspberry Pi os into the microSD card, setup the username/password before write into card power on the…]]></description><link>https://xichen1.github.io/service-on-raspberrypi/</link><guid isPermaLink="false">https://xichen1.github.io/service-on-raspberrypi/</guid><pubDate>Wed, 23 Mar 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Prepare the Raspberry Pi&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;install the Raspberry Pi os into the microSD card, setup the username/password before write into card&lt;/li&gt;
+&lt;li&gt;power on the Pi and plug in the network cable&lt;/li&gt;
+&lt;li&gt;get the ip address of the Pi through the router admin page&lt;/li&gt;
+&lt;li&gt;on another machine ssh into the Pi&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ssh pi@&amp;lt;ip address of pi&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;enable tcp forwarding for ssh(if you want to use vscode to remote work on it)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;sudo vim /etc/ssh/sshd_config
+
+# Change AllowTcpForwarding to yes&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Write a service using express and nodeJS&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;prepare the work space&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;mkdir dev
+cd dev
+npm init -y
+npm install express
+touch server.js&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;write the welcome service&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;# in server.js
+const express = require(&amp;quot;express&amp;quot;);
+const app = express();
+
+app.get(&amp;quot;/&amp;quot;, (req, res) =&amp;gt; {
+  res.send(`
+    &amp;lt;!DOCTYPE html&amp;gt;
+    &amp;lt;html&amp;gt;
+      &amp;lt;body&amp;gt;
+        &amp;lt;h1&amp;gt;Welcome&amp;lt;/h1&amp;gt;
+      &amp;lt;/body&amp;gt;
+    &amp;lt;/html&amp;gt;
+  );
+});
+
+app.listen(5000, () =&amp;gt; {console.log(`http://localhost:5000`)});&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;run the service and we should be able to see the welcome page on any machine’s browser using the ip address&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;node server.js
+# open browser on any machine under the same wifi network of the Pi and enter the ip address of the Pi and port 5000 in address bar of the browser.
+# e.g., 192.168.1.75:5000
+# You should be able to see a welcome page.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Replace the Nodejs server with the Nginx server&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;install Nginx&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;sudo apt install nginx&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;set up the reverse proxy, by enabling the reverse proxy, we added a layer between nodeJS server and the client side to realize the load balance&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;sudo vim /etc/nginx/sites-available/default
+# in the default file, add one line (proxy_pass) to the location / section
+
+location / {
+          proxy_pass http://localhost:5000;
+          try_files $uri $uri/ =404;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;now if we use any browser under the same wifi network to access the ip address, we can see the welcome page. All the request going to the ip will be handled by Nginx and be sent to localhost:5000 then.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;&lt;/h2&gt;</content:encoded></item><item><title><![CDATA[在m1安装mongodb遇到的一些坑]]></title><description><![CDATA[安装流程 install home brew    坑 Two ways to start service 根据mongodb文档, step 3和step 4中间还有一步 .  我们首先需要知道mongodb有两部分构成, server和client. 开启server…]]></description><link>https://xichen1.github.io/mongodb-install-issue/</link><guid isPermaLink="false">https://xichen1.github.io/mongodb-install-issue/</guid><pubDate>Thu, 03 Mar 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;安装流程&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;install home brew&lt;/li&gt;
 &lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;brew tap mongodb/brew&lt;/code&gt;&lt;/li&gt;
